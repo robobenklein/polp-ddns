@@ -5,5 +5,8 @@ PoLP DDNS Machines
 {% endblock %}
 
 {% block content %}
-<p>TODO</p>
+<p>List of machines:</p>
+{% for machine in machines %}
+<p>{{ machine.id }}</p>
+{% endfor %}
 {% endblock %}

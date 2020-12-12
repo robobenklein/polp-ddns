@@ -6,7 +6,7 @@ from flask import render_template, g
 from flask_security import Security, current_user
 
 app.config['SECURITY_PASSWORD_SALT'] = "07JDW05Kpg1Ika2WTdaxWFWbLgypOy"
-app.config['SECURITY_USER_IDENTITY_ATTRIBUTES'] = 'username'
+app.config['SECURITY_USER_IDENTITY_ATTRIBUTES'] = ('username','email')
 security = Security(app, db.user_datastore)
 
 @app.before_request
