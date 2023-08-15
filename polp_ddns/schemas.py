@@ -54,3 +54,12 @@ class Machine(MachineBase):
 class MachineUpdateReport(BaseModel):
     machine: Machine
     records: list[DDNSRecord]
+
+
+class HTTPError(BaseModel):
+    detail: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {"detail": "Some information about why the HTTPException was raised."},
+        }

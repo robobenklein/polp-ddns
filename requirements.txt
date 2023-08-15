@@ -6,3 +6,4 @@ cloudflare
 sqlalchemy
 fastapi
 uvicorn
+click

@@ -1,4 +1,6 @@
 
+import secrets
+
 from sqlalchemy.orm import Session
 
 from . import models, schemas
@@ -11,7 +13,7 @@ def create_machine(db: Session, machine: schemas.MachineCreate):
     # fake_hashed_password = user.password + "notreallyhashed"
     db_machine = models.Machine(
         **machine.dict(),
-        update_token=hashed_token,
+        update_token=secrets.token_urlsafe(),
     )
     db.add(db_machine)
     db.commit()
