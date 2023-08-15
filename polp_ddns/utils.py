@@ -3,7 +3,6 @@ import datetime
 import pytz
 import urllib
 
-from flask import make_response
 
 def escape_url(url):
     return urllib.parse.quote_plus(url)
