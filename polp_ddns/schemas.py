@@ -51,7 +51,14 @@ class Machine(MachineBase):
         from_attributes = True
 
 
+class MachineUpdateParams(BaseModel):
+    # TODO: allow machine to provide it's own SSH fingerprints:
+    # polpddns will verify they match and can then set SSHFP records
+    # TODO: allow machine to limit which records it wants updated (by type, fqdn, or id?)
+    pass
+
 class MachineUpdateReport(BaseModel):
+    """Update results returned to machine."""
     machine: Machine
     records: list[DDNSRecord]
 

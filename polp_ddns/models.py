@@ -1,18 +1,29 @@
 
+import enum
+
 from sqlalchemy import (
-    Boolean, Column, ForeignKey, Integer, String, JSON, DateTime,
+    Boolean, Column, ForeignKey, Integer, String, JSON, DateTime, Enum,
 )
 from sqlalchemy.orm import relationship
 
 from .database import Base
 
 
+class DNSRecordType(enum.Enum):
+    A = 1
+    AAAA = 28
+    SSHFP = 44
+
 class DDNSRecord(Base):
     __tablename__ = "ddns_records"
 
     id = Column(Integer, primary_key=True, index=True)
-    fqdn = Column(String, index=True)
-    description = Column(String, index=True)
+    fqdn = Column(String, index=True, nullable=False)
+    ttl = Column(Integer)
+    overwrite_ttl = Column(Boolean, default=False)
+    record_type = Column(Enum(DNSRecordType), index=True, nullable=False)
+    description = Column(String)
+    provider_data = Column(JSON)
 
     machine_id = Column(Integer, ForeignKey("machines.id"))
     machine = relationship("Machine", back_populates="ddns_records")

@@ -29,7 +29,6 @@ router = APIRouter(
 def update_machine_records(
         machine_name: str,
         token: str,
-        # machine_update_options:
         response: Response,
         db: Session = Depends(database.get_db),
     ) -> schemas.MachineUpdateReport:
@@ -38,9 +37,14 @@ def update_machine_records(
     except sqlalchemy.exc.NoResultFound as e:
         raise HTTPException(404, "machine not found")
 
-    # TODO auth machine by token
+    # TODO move machine token auth to a decorator or dependency?
     if token != machine.update_token:
         raise HTTPException(401, "invalid token")
+
+    if not machine.is_active:
+        raise HTTPException(403, "machine not enabled")
+
+    # TODO get the source IP address
 
     # TODO update all records assigned to machine
 

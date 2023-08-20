@@ -31,7 +31,7 @@ def new_machine(machine_name: str):
             name=machine_name,
         )
     )
-    pprint(new_machine)
+    pprint(schemas.Machine.model_validate(new_machine))
 
 if __name__ == "__main__":
     main()
