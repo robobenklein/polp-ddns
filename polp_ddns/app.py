@@ -1,11 +1,10 @@
 
-from . import log
-from flask import Flask
+from . import log, database, models
+from fastapi import FastAPI
 
-app = Flask("polp_ddns")
+models.Base.metadata.create_all(bind=database.engine)
 
-app.debug = app.config["DEBUG"]
+app = FastAPI()
 
-if app.debug:
-    log.setLevel(log.DEBUG)
-    log.debug("logger set to debug")
+log.setLevel(log.DEBUG)
+log.debug("logger set to debug")

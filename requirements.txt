@@ -1,10 +1,9 @@
-Flask
 coloredlogs
-pymongo
-gunicorn
 requests
-flask-mongoengine
-Flask-Security-Too
 bcrypt
 pytz
 cloudflare
+sqlalchemy
+fastapi
+uvicorn
+click

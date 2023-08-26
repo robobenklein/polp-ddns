@@ -2,8 +2,11 @@
 import datetime
 import pytz
 import urllib
+import ipaddress
+from ipaddress import IPv4Address, IPv6Address
 
-from flask import make_response
+from . import log
+
 
 def escape_url(url):
     return urllib.parse.quote_plus(url)
