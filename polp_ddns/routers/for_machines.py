@@ -1,11 +1,15 @@
 
+from typing import Annotated
+import ipaddress
+
 import sqlalchemy.exc
 from sqlalchemy.orm import Session
 from fastapi import (
-    APIRouter, Depends, HTTPException, Response, status,
+    APIRouter, Depends, HTTPException, Response, Request, status, Header,
 )
 
 from .. import log, database, models, schemas, crud
+# from ..utils import ip_in_private_range
 
 
 router = APIRouter(
@@ -29,6 +33,7 @@ router = APIRouter(
 def update_machine_records(
         machine_name: str,
         token: str,
+        request: Request,
         response: Response,
         db: Session = Depends(database.get_db),
     ) -> schemas.MachineUpdateReport:
@@ -44,7 +49,27 @@ def update_machine_records(
     if not machine.is_active:
         raise HTTPException(403, "machine not enabled")
 
-    # TODO get the source IP address
+    # TODO what if this is a hostname and not IP? or None?
+    if not request.client.host:
+        raise HTTPException(500, "could not find client address")
+
+    client_ip = ipaddress.ip_address(request.client.host)
+
+    # If the request comes from a private range, look for a forwarded IP header
+    is_private_ip = client_ip.is_private
+    log.debug(f"Request client: {request.client} (private: {is_private_ip})")
+
+    if is_private_ip:
+        if 'X-Forwarded-For' in request.headers:
+            forwarded_for = request.headers['X-Forwarded-For']
+            log.debug(f"Using X-Forwarded-For header: {forwarded_for}")
+            # in most cases should be handled by the ASGI/WSGI
+            raise NotImplementedError()
+        else:
+            log.warn(f"Private IP detected for update request.")
+            # client_ip = ipaddress.ip_address(request.client.host)
+    # else:
+    #     client_ip = ipaddress.ip_address(request.client.host)
 
     # TODO update all records assigned to machine
 
